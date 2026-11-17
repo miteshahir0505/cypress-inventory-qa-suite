@@ -1,4 +1,15 @@
+import invalidProducts from '../fixtures/invalid-products.json';
+
 const rows = () => cy.get('[data-cy="product-row"]');
+
+interface InvalidProductCase {
+  label: string;
+  name: string;
+  sku: string;
+  price: number | string;
+  quantity: number | string;
+  expectedError: string;
+}
 
 describe('Inventory', () => {
     beforeEach(() => {
@@ -53,25 +64,18 @@ describe('Inventory', () => {
         });
     });
 
-    const invalidCases: { label: string; price: string; quantity: string }[] = [
-        { label: 'price -10', price: '-10', quantity: '5' },
-        { label: 'price abc', price: 'abc', quantity: '5' },
-        { label: 'quantity -1', price: '10', quantity: '-1' },
-        { label: 'quantity abc', price: '10', quantity: 'abc' },
-    ];
-
-    invalidCases.forEach(({ label, price, quantity }) => {
+        (invalidProducts as InvalidProductCase[]).forEach(({ label, expectedError, ...product }) => {
         it(`rejects ${label}`, () => {
             rows().its('length').then((before) => {
-                cy.addProduct({ name: 'Test item', sku: 'TST-001', price, quantity });
+                cy.addProduct(product);
                 cy.get('[data-cy="product-error"]')
                     .should('be.visible')
-                    .and('contain', 'Invalid product data');
+                    .and('contain', expectedError);
                 rows().should('have.length', before);
             });
         });
     });
-
+    
     it('shows HTML in a product name as literal text', () => {
         const payload = '<b>bold</b>';
         cy.addProduct({ name: payload, sku: 'XSS-001', price: 10, quantity: 1 });

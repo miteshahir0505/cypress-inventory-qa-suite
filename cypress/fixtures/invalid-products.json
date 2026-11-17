@@ -1,0 +1,6 @@
+[
+  { "label": "negative price", "name": "Test Item", "sku": "TST-001", "price": -10, "quantity": 5, "expectedError": "Invalid product data" },
+  { "label": "non-numeric price", "name": "Test Item", "sku": "TST-002", "price": "abc", "quantity": 5, "expectedError": "Invalid product data" },
+  { "label": "negative quantity", "name": "Test Item", "sku": "TST-003", "price": 10, "quantity": -1, "expectedError": "Invalid product data" },
+  { "label": "non-numeric quantity", "name": "Test Item", "sku": "TST-004", "price": 10, "quantity": "abc", "expectedError": "Invalid product data" }
+]
