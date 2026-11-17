@@ -5,7 +5,7 @@ Cypress.Commands.add('login', (username: string, password: string) => {
     });
   });
 });
-Cypress.Commands.add('addProduct', (product: Product) => {
+Cypress.Commands.add('addProduct', (product: ProductInput) => {
   cy.get('[data-cy="product-name"]').type(product.name);
   cy.get('[data-cy="product-sku"]').type(product.sku);
   cy.get('[data-cy="product-price"]').type(String(product.price));
@@ -13,7 +13,7 @@ Cypress.Commands.add('addProduct', (product: Product) => {
   cy.get('[data-cy="product-save"]').click();
 });
 
-interface Product {
+interface ProductInput {
   name: string;
   sku: string;
   price: string | number;
@@ -23,10 +23,31 @@ declare global {
   namespace Cypress {
     interface Chainable<Subject = any> {
       login(username: string, password: string): Chainable<void>;
-      addProduct(product: Product): Chainable<void>;
+      addProduct(product: ProductInput): Chainable<void>;
+      seedProduct(product: NewProduct): Chainable<Product>;
     }
   }
 }
+
+interface Product {
+  id: number;
+  name: string;
+  sku: string;
+  price: number;
+  quantity: number;
+}
+
+type NewProduct = Omit<Product, 'id'>;
+
+Cypress.Commands.add('seedProduct', (product: NewProduct) => {
+  return cy
+    .request<Product>('POST', '/api/products', product)
+    .then((res) => {
+      expect(res.status).to.eq(201);
+      return res.body;
+    });
+});
+
 
 
 export {};
