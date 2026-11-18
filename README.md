@@ -1,6 +1,6 @@
-# Inventory Cypress
+# Cypress Inventory QA Suite
 
-![Cypress Tests](https://github.com/miteshahir0505/inventory-cypress/actions/workflows/cypress.yml/badge.svg)
+![Cypress Tests](https://github.com/miteshahir0505/cypress-inventory-qa-suite/actions/workflows/cypress.yml/badge.svg)
 
 End-to-end test suite for a small inventory management app, built with Cypress and TypeScript. The app is an Express server with a vanilla JS frontend. The tests cover login, product management, input validation, and network behavior.
 
