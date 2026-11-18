@@ -17,6 +17,7 @@ As an inventory manager, I want to add a product to the catalogue, so that it is
 | ADD-7 | Price and quantity must be greater than zero. | Open question |
 | ADD-8 | Adding a product with an existing SKU shows "SKU already exists" and no second product is created. | Draft |
 | ADD-9 | A successfully added product appears in the list with the entered values. | Draft |
+| ADD-10 | When the product cannot be saved because of a problem on our side or with the connection, the user sees an error message and no product is added to the list. | Open question |
 
 ## EDIT: Edit a product
 
@@ -51,3 +52,4 @@ As an inventory manager, I want to delete a product, so that I can remove items 
 - **Description field:** The original requirement listed a description. The app has none. Is it in scope?
 - **DEL-2:** Native browser confirm or custom modal, and what wording?
 - **EDIT-7:** What should the user see if the product no longer exists at save time?
+- **ADD-10:** After a failed save, should the values the user typed be kept in the form or cleared? The app currently clears all four fields, so the user loses their input and sees no error.
