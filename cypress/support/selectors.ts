@@ -1,0 +1,1 @@
+export const rows = () => cy.get('[data-cy="product-row"]');
