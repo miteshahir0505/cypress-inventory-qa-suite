@@ -26,3 +26,23 @@ describe('Edit a product', () => {
 
   // EDIT-7 is an open question (product deleted by someone else before saving). No test until decided.
 });
+describe('Edit a product (API)', () => {
+  beforeEach(() => {
+    cy.request('POST', '/api/reset');
+  });
+
+  it('saves when the SKU is left unchanged', () => {
+  cy.request('GET', '/api/products').its('body.length').then((before) => {
+    cy.request({
+      method: 'PUT',
+      url: '/api/products/1',
+      body: { name: 'Gaming Laptop', sku: 'LAP-001', price: 999, quantity: 10 },
+    }).then((response) => {
+      expect(response.status).to.eq(200);
+      expect(response.body.name).to.eq('Gaming Laptop');
+    });
+
+    cy.request('GET', '/api/products').its('body').should('have.length', before);
+  });
+});
+});
