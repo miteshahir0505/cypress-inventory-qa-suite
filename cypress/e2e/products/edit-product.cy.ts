@@ -64,4 +64,33 @@ describe('Edit a product (API)', () => {
       expect(laptop.name).to.eq('Laptop');
     });
   });
+
+  const invalidEdits = [
+    { label: 'an empty name', changes: { name: '' } },
+    { label: 'an empty SKU', changes: { sku: '' } },
+    { label: 'a negative price', changes: { price: -10 } },
+    { label: 'a non-numeric price', changes: { price: 'abc' } },
+    { label: 'a negative quantity', changes: { quantity: -1 } },
+    { label: 'a non-numeric quantity', changes: { quantity: 'abc' } },
+  ];
+
+  invalidEdits.forEach(({ label, changes }) => {
+    it(`rejects ${label}`, () => {
+      cy.request({
+        method: 'PUT',
+        url: '/api/products/1',
+        body: { name: 'Laptop', sku: 'LAP-001', price: 999, quantity: 10, ...changes },
+        failOnStatusCode: false,
+      }).then((response) => {
+        expect(response.status).to.eq(400);
+        expect(response.body.error).to.eq('Invalid product data');
+      });
+
+      cy.request('GET', '/api/products').its('body').then((products) => {
+        const laptop = products.find((p: { id: number }) => p.id === 1);
+        expect(laptop).to.deep.include({ name: 'Laptop', sku: 'LAP-001', price: 999, quantity: 10 });
+      });
+    });
+  });
+
 });
