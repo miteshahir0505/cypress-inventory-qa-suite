@@ -93,4 +93,22 @@ describe('Edit a product (API)', () => {
     });
   });
 
+  it('updates the existing product with the new values and adds no extra product', () => {
+    cy.request('GET', '/api/products').its('body.length').then((before) => {
+      cy.request({
+        method: 'PUT',
+        url: '/api/products/2',
+        body: { name: 'Wireless Mouse', sku: 'MOU-001', price: 30, quantity: 40 },
+      }).then((response) => {
+        expect(response.status).to.eq(200);
+      });
+
+      cy.request('GET', '/api/products').its('body').then((products) => {
+        expect(products).to.have.length(before);
+        const mouse = products.find((p: { id: number }) => p.id === 2);
+        expect(mouse).to.deep.include({ name: 'Wireless Mouse', price: 30, quantity: 40 });
+      });
+    });
+  });
+
 });
