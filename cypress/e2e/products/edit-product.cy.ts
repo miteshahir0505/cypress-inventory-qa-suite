@@ -30,11 +30,36 @@ describe('Edit a product', () => {
   it('shows a validation message and saves no changes when the edited values are invalid');
 
   // EDIT-4
-  it('shows "SKU already exists" and saves no changes when the SKU belongs to another product');
+  it('shows "SKU already exists" and saves no changes when the SKU belongs to another product', () => {
+    cy.get('[data-cy="product-row"]').its('length').then((before) => {
+      cy.contains('[data-cy="product-row"]', 'Laptop')
+        .find('[data-cy="product-edit"]')
+        .click();
+      cy.get('[data-cy="product-sku"]').clear().type('KEY-001');
+      cy.get('[data-cy="product-save"]').click();
+      cy.get('[data-cy="product-error"]').should('contain', 'SKU already exists');
+      cy.reload();
+      cy.contains('[data-cy="product-row"]', 'Laptop').should('not.contain', 'KEY-001');
+      cy.contains('[data-cy="product-row"]', 'Laptop').should('contain', 'LAP-001');
+      cy.contains('[data-cy="product-row"]', 'Keyboard').should('contain', 'KEY-001');
+      cy.get('[data-cy="product-row"]').should('have.length', before);
+    });
+  });
 
   // EDIT-5
-  it('saves successfully when the product keeps its own SKU');
-
+  it('saves successfully when the product keeps its own SKU', () => {
+    cy.get('[data-cy="product-row"]').its('length').then((before) => {
+      cy.contains('[data-cy="product-row"]', 'Keyboard')
+        .find('[data-cy="product-edit"]')
+        .click();
+      cy.get('[data-cy="product-price"]').clear().type('85');
+      cy.get('[data-cy="product-save"]').click();
+      cy.contains('[data-cy="product-row"]', 'Keyboard').should('contain', '85');
+      cy.contains('[data-cy="product-row"]', 'Keyboard').should('contain', 'KEY-001');
+      cy.get('[data-cy="product-error"]').should('not.be.visible');
+      cy.get('[data-cy="product-row"]').should('have.length', before);
+    });
+  });
 
   // EDIT-6
   it('updates the existing row with the new values and adds no extra row', () => {
