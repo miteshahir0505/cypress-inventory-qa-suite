@@ -15,16 +15,16 @@ describe('Edit a product', () => {
   });
 
   // EDIT-2
- it('pre-fills the edit form with the current name, SKU, price and quantity', () => {
-  cy.contains('[data-cy="product-row"]', 'Keyboard')
-    .find('[data-cy="product-edit"]')
-    .click();
+  it('pre-fills the edit form with the current name, SKU, price and quantity', () => {
+    cy.contains('[data-cy="product-row"]', 'Keyboard')
+      .find('[data-cy="product-edit"]')
+      .click();
 
-  cy.get('[data-cy="product-name"]').should('have.value', 'Keyboard');
-  cy.get('[data-cy="product-sku"]').should('have.value', 'KEY-001');
-  cy.get('[data-cy="product-price"]').should('have.value', '75');
-  cy.get('[data-cy="product-quantity"]').should('have.value', '30');
-});
+    cy.get('[data-cy="product-name"]').should('have.value', 'Keyboard');
+    cy.get('[data-cy="product-sku"]').should('have.value', 'KEY-001');
+    cy.get('[data-cy="product-price"]').should('have.value', '75');
+    cy.get('[data-cy="product-quantity"]').should('have.value', '30');
+  });
 
   // EDIT-3 (field rules follow ADD-2 to ADD-6; ADD-7 is an open question)
   it('shows a validation message and saves no changes when the edited values are invalid');
@@ -35,16 +35,32 @@ describe('Edit a product', () => {
   // EDIT-5
   it('saves successfully when the product keeps its own SKU');
 
-  // EDIT-6
-  it('updates the existing row with the new values and adds no extra row');
 
+  // EDIT-6
+  it('updates the existing row with the new values and adds no extra row', () => {
+    cy.get('[data-cy="product-row"]').its('length').then((before) => {
+      cy.contains('[data-cy="product-row"]', 'Keyboard')
+        .find('[data-cy="product-edit"]')
+        .click();
+
+      cy.get('[data-cy="product-name"]').clear().type('Gaming Keyboard');
+      cy.get('[data-cy="product-sku"]').clear().type('KEY-002');
+      cy.get('[data-cy="product-price"]').clear().type('80');
+      cy.get('[data-cy="product-quantity"]').clear().type('25');
+      cy.get('[data-cy="product-save"]').click();
+
+      cy.contains('[data-cy="product-row"]', 'Gaming Keyboard').should('exist');
+      cy.contains('[data-cy="product-row"]', 'KEY-001').should('not.exist');
+      cy.get('[data-cy="product-row"]').should('have.length', before);
+    });
+  });
   // EDIT-7 is an open question (product deleted by someone else before saving). No test until decided.
 });
 
 describe('Edit a product (API)', () => {
   beforeEach(() => {
     cy.request('POST', '/api/reset');
-  
+
   });
 
   it('saves when the SKU is left unchanged', () => {
