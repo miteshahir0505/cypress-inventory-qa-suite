@@ -7,10 +7,24 @@ describe('Edit a product', () => {
   });
 
   // EDIT-1
-  it('shows a pencil icon on every product row that opens the edit form');
+  it('opens the edit form from the pencil icon on a product row', () => {
+    cy.contains('[data-cy="product-row"]', 'Mouse')
+      .find('[data-cy="product-edit"]')
+      .click();
+    cy.get('[data-cy="product-save"]').should('have.text', 'Save');
+  });
 
   // EDIT-2
-  it('pre-fills the edit form with the current name, SKU, price and quantity');
+ it('pre-fills the edit form with the current name, SKU, price and quantity', () => {
+  cy.contains('[data-cy="product-row"]', 'Keyboard')
+    .find('[data-cy="product-edit"]')
+    .click();
+
+  cy.get('[data-cy="product-name"]').should('have.value', 'Keyboard');
+  cy.get('[data-cy="product-sku"]').should('have.value', 'KEY-001');
+  cy.get('[data-cy="product-price"]').should('have.value', '75');
+  cy.get('[data-cy="product-quantity"]').should('have.value', '30');
+});
 
   // EDIT-3 (field rules follow ADD-2 to ADD-6; ADD-7 is an open question)
   it('shows a validation message and saves no changes when the edited values are invalid');
@@ -30,6 +44,7 @@ describe('Edit a product', () => {
 describe('Edit a product (API)', () => {
   beforeEach(() => {
     cy.request('POST', '/api/reset');
+  
   });
 
   it('saves when the SKU is left unchanged', () => {
