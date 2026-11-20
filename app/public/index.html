@@ -1,17 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <title>Inventory</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 40px; }
-    .hidden { display: none; }
-    .error { color: #b00020; margin: 8px 0; }
-    input { margin: 4px; padding: 6px; }
-    table { border-collapse: collapse; margin-top: 16px; }
-    td, th { border: 1px solid #ccc; padding: 6px 12px; }
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .error {
+      color: #b00020;
+      margin: 8px 0;
+    }
+
+    input {
+      margin: 4px;
+      padding: 6px;
+    }
+
+    table {
+      border-collapse: collapse;
+      margin-top: 16px;
+    }
+
+    td,
+    th {
+      border: 1px solid #ccc;
+      padding: 6px 12px;
+    }
+
+    td button+button {
+      margin-left: 6px;
+    }
   </style>
 </head>
+
 <body>
   <section id="login-view" data-cy="login-view">
     <h1>Login</h1>
@@ -34,13 +63,22 @@
     <div class="error hidden" data-cy="product-error"></div>
 
     <table data-cy="product-table">
-      <thead><tr><th>Name</th><th>SKU</th><th>Price</th><th>Qty</th><th></th></tr></thead>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>SKU</th>
+          <th>Price</th>
+          <th>Qty</th>
+          <th></th>
+        </tr>
+      </thead>
       <tbody data-cy="product-body"></tbody>
     </table>
   </section>
 
   <script>
     const $ = (name) => document.querySelector('[data-cy="' + name + '"]');
+    let editingId = null;
 
     function showError(name, message) {
       const el = $(name);
@@ -97,10 +135,24 @@
           tr.appendChild(td);
         });
         const actions = document.createElement('td');
+
+        const edit = document.createElement('button');
+        edit.textContent = '✎';
+        edit.setAttribute('data-cy', 'product-edit');
+        edit.addEventListener('click', () => {
+          $('product-name').value = p.name;
+          $('product-sku').value = p.sku;
+          $('product-price').value = p.price;
+          $('product-quantity').value = p.quantity;
+          editingId = p.id;
+          $('product-save').textContent = 'Save';
+        });
+
         const del = document.createElement('button');
         del.textContent = 'Delete';
         del.setAttribute('data-cy', 'product-delete');
         del.addEventListener('click', () => removeProduct(p.id));
+        actions.appendChild(edit);
         actions.appendChild(del);
         tr.appendChild(actions);
         body.appendChild(tr);
@@ -109,8 +161,10 @@
 
     async function addProduct() {
       clearError('product-error');
-      const res = await fetch('/api/products', {
-        method: 'POST',
+      const url = editingId === null ? '/api/products' : '/api/products/' + editingId;
+      const method = editingId === null ? 'POST' : 'PUT';
+      const res = await fetch(url, {
+        method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: $('product-name').value,
@@ -121,6 +175,8 @@
       });
       if (res.status === 400) return showError('product-error', 'Invalid product data');
       if (res.status === 409) return showError('product-error', 'SKU already exists');
+      editingId = null;
+      $('product-save').textContent = 'Add';
       ['product-name', 'product-sku', 'product-price', 'product-quantity']
         .forEach((n) => ($(n).value = ''));
       loadProducts();
@@ -137,4 +193,5 @@
     showView();
   </script>
 </body>
+
 </html>
