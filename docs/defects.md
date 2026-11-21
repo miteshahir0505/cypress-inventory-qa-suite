@@ -26,9 +26,10 @@
 
 ## DEF-002: Edit UI is not implemented
 
-- **Criterion:** EDIT-1, EDIT-2 (EDIT-3 to EDIT-6 cannot be tested through the UI)
+- **Criterion:** EDIT-1, EDIT-2
 - **Severity:** Medium (users cannot correct a product; they must delete and re-add it)
-- **Status:** Open
+- **Status:** Closed
+- **Closed:** edit UI added in PR #8, EDIT-4 and EDIT-5 UI tests added in PR #9.
 - **Where:** `app/public/index.html`
 
 **Steps**
@@ -41,8 +42,7 @@
 
 **Cause:** `index.html` never calls `PUT /api/products/:id`. The endpoint exists in `server.js`, so the backend is ready and the frontend is not.
 
-**Automated test:** `edit-product.cy.ts`, all six tests (skipped at UI level). The API-level tests for EDIT-3 to EDIT-6 are not blocked by this defect.
-
+**Automated test:** `edit-product.cy.ts`. EDIT-1, 2, 4, 5 and 6 run as UI tests. The EDIT-3 UI test is still to be written. API-level tests cover EDIT-3 to EDIT-6.
 
 ## DEF-003: Empty price or quantity is accepted and saved as 0
 
@@ -67,4 +67,6 @@
 
 **Cause:** `Number('')` and `Number(' ')` both return `0`, so `isValid` cannot tell an empty field from a real zero. `0` is finite and `>= 0`, so it passes.
 
-**Fix constraint:** reject empty or whitespace-only price and
+**Fix constraint:** reject empty or whitespace-only price and quantity only. Do not reject `0`, because ADD-7 is still an open question.
+
+**Automated test:** to be written (skipped, referencing this defect). Remove `.skip` once fixed.
