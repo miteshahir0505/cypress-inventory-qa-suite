@@ -1,4 +1,4 @@
-// UI tests are pending until the edit UI exists (see DEF-002).
+// The edit UI is implemented and DEF-002 is closed. EDIT-3 and EDIT-7 are the criteria without a UI test yet (EDIT-3 is in progress, EDIT-7 is an open question).
 describe('Edit a product', () => {
   beforeEach(() => {
     cy.request('POST', '/api/reset');

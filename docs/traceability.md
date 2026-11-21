@@ -16,12 +16,12 @@ Status: **Automated** (test exists and runs), **Blocked** (test written, skipped
 | ADD-8 | Duplicate SKU rejected | `products/add-product.cy.ts` | shows "SKU already exists" and creates no second product for a duplicate SKU | Automated |
 | ADD-9 | Added product appears with entered values | `products/add-product.cy.ts` | lists a successfully added product with the entered values | Automated |
 | ADD-10 | Error shown when save fails | `products/add-product.cy.ts` | shows an error and adds no product when the product cannot be saved | Blocked by DEF-001 |
-| EDIT-1 | Pencil icon opens edit form | `products/edit-product.cy.ts` | shows a pencil icon on every product row that opens the edit form | Pending |
-| EDIT-2 | Edit form pre-filled | `products/edit-product.cy.ts` | pre-fills the edit form with the current name, SKU, price and quantity | Pending |
+| EDIT-1 | Pencil icon opens edit form | `products/edit-product.cy.ts` | shows a pencil icon on every product row that opens the edit form | Automated |
+| EDIT-2 | Edit form pre-filled | `products/edit-product.cy.ts` | pre-fills the edit form with the current name, SKU, price and quantity | Automated |
 | EDIT-3 | Same field rules as Add | `products/edit-product.cy.ts` | shows a validation message and saves no changes when the edited values are invalid | Pending |
-| EDIT-4 | SKU of another product rejected | `products/edit-product.cy.ts` | shows "SKU already exists" and saves no changes when the SKU belongs to another product | Pending |
-| EDIT-5 | Own SKU unchanged saves | `products/edit-product.cy.ts` | saves successfully when the product keeps its own SKU | Pending |
-| EDIT-6 | Save updates the row, no extra row | `products/edit-product.cy.ts` | updates the existing row with the new values and adds no extra row | Pending |
+| EDIT-4 | SKU of another product rejected | `products/edit-product.cy.ts` | shows "SKU already exists" and saves no changes when the SKU belongs to another product | Automated |
+| EDIT-5 | Own SKU unchanged saves | `products/edit-product.cy.ts` | saves successfully when the product keeps its own SKU | Automated |
+| EDIT-6 | Save updates the row, no extra row | `products/edit-product.cy.ts` | updates the existing row with the new values and adds no extra row | Automated |
 | EDIT-7 | Product deleted before save | | | Open question |
 | DEL-1 | Delete button on each row | `products/delete-product.cy.ts` | shows a delete button on every product row | Automated |
 | DEL-2 | Confirmation before removing | `products/delete-product.cy.ts` | asks the user to confirm before removing a product | Open question (the app deletes without asking today) |
@@ -32,7 +32,7 @@ Status: **Automated** (test exists and runs), **Blocked** (test written, skipped
 
 ## Coverage
 
-23 criteria: 12 automated, 1 blocked (ADD-10), 7 pending (EDIT-1 to EDIT-6, DEL-4), 3 open questions (ADD-7, EDIT-7, DEL-2).
+23 criteria: 17 automated, 1 blocked (ADD-10), 2 pending (EDIT-3, DEL-4), 3 open questions (ADD-7, EDIT-7, DEL-2).
 
 ## Tests with no criterion
 
